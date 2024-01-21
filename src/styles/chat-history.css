@@ -1,0 +1,380 @@
+/* /styles/chat-history.css */
+
+.container {
+    width: 100vw;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 5px 10px;
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ccc;
+    height: 40px;
+}
+
+.profile-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
+.profile-image-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 24px;
+    color: white;
+}
+
+.profile-name {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.angle-down {
+    margin-top: 2px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 24px;
+}
+
+.logout-button {
+    position: absolute;
+    margin-top: 5px;
+    margin-right: 2px;
+    top: 55px;
+    right: 0;
+}
+
+button {
+    height: 40px;
+    width: 100px;
+    font-family: 'Arial', sans-serif;
+    font-size: medium;
+    align-self: center;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #d6d6d6;
+    border-radius: 5px;
+}
+
+.user-list {
+    flex: 1;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    min-width: 160px;
+}
+
+.user-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    height: 60px;
+}
+
+.user-list-item:hover {
+    background-color: #e6e6e6;
+}
+
+.user-list-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 20px;
+}
+
+.user-info h5 {
+    font-size: medium;
+    margin: 0;
+}
+
+.user-info p {
+    font-size: small;
+    margin: 0;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+.user-detail-image {
+    margin: 0;
+    font-size: medium;
+    color: #7d7d7d;
+    margin-top: 5px;
+}
+
+.chat-history-container {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - 62px);
+    overflow-x: hidden;
+}
+
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    flex: 3;
+    overflow-y: hidden;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.chat-box {
+    flex: 1;
+    padding: 10px;
+    height: calc(100vh - 130px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.date-separator {
+    margin: 25px auto;
+    width: max-content;
+    background-color: #efefef;
+    border-radius: 20px;
+    padding: 5px 30px;
+}
+
+.message {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    max-width: 80%;
+    margin-bottom: 10px;
+    border-radius: 18px;
+    word-wrap: break-word;
+}
+
+.message-user-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+}
+
+.message-user-image-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #ccc;
+}
+
+.message-detail {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    max-width: 90%;
+}
+
+.message p {
+    margin: 0;
+    padding: 5px 15px;
+    background-color: #ccc;
+    border-radius: 10px;
+    font-size: x-small;
+}
+
+.message-detail-image {
+    max-width: 95%;
+    max-height: 600px;
+    border: 1px solid #ccc;
+    display: block;
+    margin: auto;
+}
+
+.received {
+    align-self: flex-start;
+}
+
+.sent {
+    align-self: flex-end;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.sent p {
+    background-color: #e5e5ea;
+    color: black;
+
+}
+
+.timestamp {
+    display: block;
+    font-size: x-small;
+    color: #888;
+    text-align: right;
+    margin-top: 5px;
+}
+
+.input-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #b3b2b2;
+    height: 80px;
+}
+
+.input-area input {
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 2px;
+    margin-right: 20px;
+    height: 20px;
+    font-size: small;
+    width: -webkit-fill-available;
+}
+
+.input-area button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #6b6b6b;
+    color: white;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-right: 2px;
+}
+
+.input-area button:hover {
+    background-color: #828282;
+    border-radius: 10px;
+}
+
+.input-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #2d2d2d;
+    background-color: #bd7070;
+    height: 80px;
+}
+
+.input-block p {
+    margin-left: 10px;
+}
+
+.detail-container {
+    flex: 1;
+    background-color: #f9f9f9;
+    min-width: 160px;
+}
+
+.detail-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+}
+
+.detail-profile img {
+    align-items: center;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin-top: 120px;
+    margin-bottom: 10px;
+}
+
+.detail-profile h5 {
+    align-items: center;
+    font-size: large;
+    margin: 0;
+    margin-bottom: 50px;
+}
+
+.detail-profile-info {
+    padding-bottom: 5px;
+    margin: auto;
+    margin-bottom: 40px;
+    display: block;
+}
+
+.detail-profile-info p {
+    align-items: center;
+    font-size: small;
+    margin: 0;
+    margin-top: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.detail-profile button {
+    align-items: center;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.space {
+    flex: 1;
+    background-color: #f9f9f9;
+    min-width: 160px;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

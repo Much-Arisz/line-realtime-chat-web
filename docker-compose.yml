@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.nextjs
+      args:
+        - BUILD_DATE=$(date)
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    expose:
+      - "${SERVER_PORT}"
+    env_file: .env
+    working_dir: /app
+    
+    volumes:
+      - .:/app
+      - ./.env:/app/.env
+    command: npm run dev
+
+  ngrok:
+    image: wernight/ngrok
+    ports:
+      - "4040:4040" 
+    expose:
+      - "4040"
+    command: ngrok http --authtoken=${NGROK_AUTHTOKEN} --hostname=${NGROK_WEBDOMAIN} web:${SERVER_PORT}
+    env_file: .env
+
+# ngrok http --authtoken=${NGROK_AUTHTOKEN} --hostname=${NGROK_WEBDOMAIN} web:${SERVER_PORT}
