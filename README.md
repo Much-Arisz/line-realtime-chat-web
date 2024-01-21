@@ -14,8 +14,8 @@ $ npm install
 ``` bash
 $ docker-compose up -d
 ```
-3. Public URL (NGROK)
-- https://drum-star-stud.ngrok-free.app/
+3. Public URL (NGROK) after run docker-compose
+- https://drum-star-stud.ngrok-free.app/ 
 4. Add Line OA
 - ID: @838qvqkc
 - QRCODE
