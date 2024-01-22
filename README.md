@@ -10,7 +10,7 @@ $ npm install
 ```
 ### Start Project
 1. Locally
-### Run project
+- Run project
 ``` bash
 $ npm run start
 ```
