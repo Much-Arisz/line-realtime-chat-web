@@ -24,11 +24,12 @@ const getUserListApi = async () => {
     const token = store.getState().auth.profile.token;
     try {
         const response = await fetch(`${apiUrl}/chat/getUserList`, {
-            method: 'GET',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token,
             },
+            body: JSON.stringify({}),
         });
 
         if (!response.ok) {
@@ -45,9 +46,13 @@ const getUserListApi = async () => {
 const getImageChat = async (id: string): Promise<string | undefined> => {
     const token = store.getState().auth.profile.token;
     try {
-        const response = await fetch(`${apiUrl}/chat/getImageChat?id=${id}`, {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + token },
+        const response = await fetch(`${apiUrl}/chat/getImageChat`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            },
+            body: JSON.stringify({ id }),
         });
 
         if (!response.ok) {

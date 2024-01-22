@@ -48,18 +48,29 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                 const stateProfile = state.profile;;
                 dispatch(setStoreIsLogin(stateIsLogin));
                 dispatch(setStoreProfile(stateProfile));
-
-                if (stateIsLogin && stateProfile.type === "Admin") {
-                    fetchUserList();
-                    setupSocketListeners();
-                } else {
+                if (!(stateIsLogin && stateProfile.type === "Admin")) {
                     router.replace("/admin/login");
                 }
             }
         };
 
         loadFromLocalStorage();
-    }, [dispatch, router, isLogin, profile]);
+    }, [dispatch, router]);
+
+
+    useEffect(() => {
+        setupSocketListeners();
+        return () => {
+            socket.off('webhook');
+            socket.disconnect();
+        };
+    }, []);
+
+    useEffect(() => {
+        if (isLogin) {
+            fetchUserList();
+        }
+    }, [isLogin]);
 
     const handleLogout = async () => {
         dispatch(setStoreProfile(initialProfile));
@@ -78,6 +89,8 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                 const messages: MessageModel[] = userSorted[0].message;
                 setSelectedUser(userSorted[0]);
                 setChatMessages(messages);
+
+                setIsLoading(false);
                 for (const message of messages) {
                     const messageElement = await showChatMessage(message);
                     setMessageData((prevMessageData) => ({
@@ -85,7 +98,6 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                         [message._id]: messageElement,
                     }));
                 }
-                setIsLoading(false);
             } else {
                 setIsLoading(false);
                 console.log('User list is empty');
@@ -105,9 +117,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
 
         return () => {
             socket.off('webhook');
-            if (socket) {
-                socket.disconnect();
-            }
+            socket.disconnect();
         };
     };
 
@@ -126,11 +136,11 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
             }
 
             if (!latestMessageA) {
-                return 1; 
+                return 1;
             }
 
             if (!latestMessageB) {
-                return -1; 
+                return -1;
             }
 
             const dateA = dayjs(latestMessageA.dateTime);
@@ -148,16 +158,20 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
             ...prevMessageData,
             [message._id]: messageElement,
         }));
+        setChatMessages((prevMessages) => [...prevMessages, message]);
         setUsers((prevUsers) => {
             const updatedUsers = prevUsers.map((user) => {
                 if (user._id === userData._id) {
-                    user.message.push(message);
+                    const updatedMessages = [...user.message, message];
+                    return { ...user, message: updatedMessages };
                 }
                 return user;
             });
-            return updatedUsers;
+            return sortUsers(updatedUsers);
         });
-        sortUsers(users);
+        if (userData._id === selectedUser?._id) {
+            setChatMessages((prevMessages) => [...prevMessages, message]);
+        }
         setTimeout(() => { focusChat(); }, 50);
     };
 
@@ -181,7 +195,6 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                 detail: inputMessage,
             }
             updateMessageDetail(userModel, input);
-            sortUsers(users);
             socket.emit('adminReply', input);
             setInputMessage('');
         }
@@ -327,7 +340,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                                                     <div key={message._id + index} className={`message ${message.senderType === 'User' ? 'received' : 'sent'}`}>
                                                         <div>
                                                             {message.senderType === 'User' && selectedUser
-                                                                ? <img key={message._id} src={selectedUser.image} alt={selectedUser.name} className="message-user-image" />
+                                                                ? <img key={message._id + selectedUser} src={selectedUser.image} alt={selectedUser.name} className="message-user-image" />
                                                                 : <div className="message-user-image-placeholder"></div>}
                                                         </div>
                                                         <div className='message-detail'>
