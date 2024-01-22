@@ -74,9 +74,9 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
             const response = await getUserListApi();
             const userList = response.responseData.userList
             if (userList && userList.length > 0) {
-                const messages: MessageModel[] = userList[0].message;
-                setUsers(userList);
-                setSelectedUser(userList[0]);
+                const userSorted = sortUsers(userList);
+                const messages: MessageModel[] = userSorted[0].message;
+                setSelectedUser(userSorted[0]);
                 setChatMessages(messages);
                 for (const message of messages) {
                     const messageElement = await showChatMessage(message);
@@ -91,6 +91,8 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                 console.log('User list is empty');
             }
         } catch (error) {
+            setIsLoading(false);
+            alert(`${error}`);
             console.error('error', error);
         }
     };
@@ -109,6 +111,37 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
         };
     };
 
+    const sortUsers = (userList: UserMessageModel[]) => {
+        const usersWithLatestMessage = userList.map((user) => {
+            const latestMessage = user.message[0];
+            return { ...user, latestMessage };
+        });
+
+        const sortedUsers = usersWithLatestMessage.sort((a, b) => {
+            const latestMessageA = a.latestMessage;
+            const latestMessageB = b.latestMessage;
+
+            if (!latestMessageA && !latestMessageB) {
+                return 0;
+            }
+
+            if (!latestMessageA) {
+                return 1; 
+            }
+
+            if (!latestMessageB) {
+                return -1; 
+            }
+
+            const dateA = dayjs(latestMessageA.dateTime);
+            const dateB = dayjs(latestMessageB.dateTime);
+
+            return dateB.isSameOrAfter(dateA) ? -1 : 1;
+        });
+        setUsers(sortedUsers);
+        return sortedUsers;
+    }
+
     const updateMessageDetail = async (userData: UserModel, message: MessageModel) => {
         const messageElement = await showChatMessage(message);
         setMessageData((prevMessageData) => ({
@@ -124,6 +157,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
             });
             return updatedUsers;
         });
+        sortUsers(users);
         setTimeout(() => { focusChat(); }, 50);
     };
 
@@ -147,6 +181,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                 detail: inputMessage,
             }
             updateMessageDetail(userModel, input);
+            sortUsers(users);
             socket.emit('adminReply', input);
             setInputMessage('');
         }
@@ -176,11 +211,11 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
     const showChatMessage = async (message: MessageModel) => {
         const msgType = message.messageType;
 
-        if (msgType === "image" && profile.token) {
+        if (msgType === "image") {
             try {
-                const imageResponse = await getImageChat(message.detail); // Assuming message._id is the image ID
+                const imageResponse = await getImageChat(message.detail);
                 if (imageResponse) {
-                    return <img key={message._id+Date.now()} src={imageResponse} alt={message.detail} className='message-detail-image' />;
+                    return <img key={message.detail} src={imageResponse} alt={message.detail} className='message-detail-image' />;
                 }
             } catch (error) {
                 console.error("Error fetching image:", error);
@@ -193,9 +228,16 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
         return null;
     };
 
-    const handleUserSelect = (user: UserMessageModel) => {
+    const handleUserSelect = async (user: UserMessageModel) => {
         setSelectedUser(user);
         setChatMessages(user.message);
+        for (const message of user.message) {
+            const messageElement = await showChatMessage(message);
+            setMessageData((prevMessageData) => ({
+                ...prevMessageData,
+                [message._id]: messageElement,
+            }));
+        }
         focusChat();
     };
 
@@ -240,7 +282,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
             {isLogin && profile.type === 'Admin' && (
                 <>
                     {isLoading ? (
-                        <div>Loading...</div> // หรือใช้ component สำหรับแสดงการโหลดที่มีการออกแบบมาเป็นพิเศษ
+                        <div className='loading'>Loading...</div> // หรือใช้ component สำหรับแสดงการโหลดที่มีการออกแบบมาเป็นพิเศษ
                     ) : (
                         <div className="container">
                             <div className="chat-header">
@@ -259,8 +301,8 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                                 <div className="user-list">
                                     {users.length > 0 ?
                                         <div>
-                                            {users.map(user => (
-                                                <div key={user._id+Date.now()} className="user-list-item" onClick={() => handleUserSelect(user)}>
+                                            {users.map((user, index) => (
+                                                <div key={index} className="user-list-item" onClick={() => handleUserSelect(user)}>
                                                     <img src={user.image} alt={user.name} />
                                                     <div className="user-info">
                                                         <h5>{user.username}</h5>
@@ -282,7 +324,7 @@ const ChatHistoryPage: React.FC<ChatHistoryPageProps> = () => {
                                                             {getDisplayDate(message, index, chatMessages)}
                                                         </div>
                                                     )}
-                                                    <div key={message._id+Date.now()} className={`message ${message.senderType === 'User' ? 'received' : 'sent'}`}>
+                                                    <div key={message._id + index} className={`message ${message.senderType === 'User' ? 'received' : 'sent'}`}>
                                                         <div>
                                                             {message.senderType === 'User' && selectedUser
                                                                 ? <img key={message._id} src={selectedUser.image} alt={selectedUser.name} className="message-user-image" />

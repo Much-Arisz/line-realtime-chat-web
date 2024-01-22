@@ -35,7 +35,7 @@ const RegisterPage: React.FC<RegisterPageProps> = () => {
             }
         } catch (error) {
             console.error('Error during login:', error);
-            alert('Error during login. Please try again.');
+            alert(`Error during Register. Please try again. url=${process.env.NEXT_PUBLIC_API_URL}`);
         }
     };
 
@@ -51,12 +51,12 @@ const RegisterPage: React.FC<RegisterPageProps> = () => {
             </Head>
             <main >
                 <div>
-                    {success  
-                    ?   <div>
+                    {success
+                        ? <div className='success'>
                             <h1>Success</h1>
                             <p>Thank you, You can close this page.</p>
-                        </div> 
-                    :   <Form className="form" onSubmit={handleSubmit}>
+                        </div>
+                        : <Form className="form" onSubmit={handleSubmit}>
                             <Form.Group className="form-group">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control

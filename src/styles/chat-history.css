@@ -1,4 +1,11 @@
 /* /styles/chat-history.css */
+.loading {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    font-size: x-large;
+}
 
 .container {
     width: 100vw;
@@ -54,7 +61,7 @@
     position: absolute;
     margin-top: 5px;
     margin-right: 2px;
-    top: 55px;
+    top: 45px;
     right: 0;
 }
 
@@ -164,6 +171,7 @@ button:hover {
 }
 
 .date-separator {
+    font-size: small;
     margin: 25px auto;
     width: max-content;
     background-color: #efefef;
