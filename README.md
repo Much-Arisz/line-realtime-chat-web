@@ -4,17 +4,17 @@ Line OA Real-time Chat Front-end (Web)
 - Node.js 18 or higher
 - Docker (optional)
 ## Quick Start
-- Install Project
+### Install Project
 ``` bash
 $ npm install
 ```
-- Start Project
+### Start Project
 1. Locally
-   - Run project
+### Run project
 ``` bash
 $ npm run start
 ```
-  - Test
+- Test
     - You already run back-end on locally ([line-realtime-chat-api](https://github.com/Much-Arisz/line-realtime-chat-api))
     - Test user type "Admin" => http://localhost:3000/admin/login
     - Test user type "User"
