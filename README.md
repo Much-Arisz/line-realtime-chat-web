@@ -15,7 +15,7 @@ $ npm install
 $ npm run start
 ```
   - Test
-    - You already run back-end on locally ([line-realtime-chat-web](https://github.com/Much-Arisz/line-realtime-chat-api))
+    - You already run back-end on locally ([line-realtime-chat-api](https://github.com/Much-Arisz/line-realtime-chat-api))
     - Test user type "Admin" => http://localhost:3000/admin/login
     - Test user type "User"
        - Add Line OA => ID: @838qvqkc or QRCODE
